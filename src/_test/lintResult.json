@@ -1,0 +1,19 @@
+{
+  "errorCount": 0,
+  "failures": [
+    {
+      "failure": "Array type using 'Array<T>' is forbidden for simple types. Use 'T[]' instead.",
+      "ruleName": "array-type",
+      "fix": [{ "start": 7, "length": 6, "text": "" }, { "start": 19, "length": 1, "text": "[]" }],
+      "fileName": "git:/github.com/jlangston/dummy-tslint-ext-target?b0a5fad1005935e565820a1cd867d85ba2fdf5dc#test-data/warnings/test.ts",
+      "startPosition": { "position": 7, "lineAndCharacter": { "line": 0, "character": 7 } },
+      "endPosition": { "position": 20, "lineAndCharacter": { "line": 0, "character": 20 } },
+      "rawLines": "let t: Array<string> = new Array<string>();\n\nconsole.log(t);\n",
+      "ruleSeverity": "warning"
+    }
+  ],
+  "fixes": [],
+  "format": "json",
+  "output": "[{\"endPosition\":{\"character\":20,\"line\":0,\"position\":20},\"failure\":\"Array type using 'Array<T>' is forbidden for simple types. Use 'T[]' instead.\",\"fix\":[{\"innerStart\":7,\"innerLength\":6,\"innerText\":\"\"},{\"innerStart\":19,\"innerLength\":1,\"innerText\":\"[]\"}],\"name\":\"git:/github.com/jlangston/dummy-tslint-ext-target?b0a5fad1005935e565820a1cd867d85ba2fdf5dc#test-data/warnings/test.ts\",\"ruleName\":\"array-type\",\"ruleSeverity\":\"WARNING\",\"startPosition\":{\"character\":7,\"line\":0,\"position\":7}}]",
+  "warningCount": 1
+}

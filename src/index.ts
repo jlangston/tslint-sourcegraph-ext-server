@@ -2,7 +2,6 @@ import * as express from 'express'
 import * as asyncHandler from 'express-async-handler'
 import * as bodyParser from 'body-parser'
 import * as cors from 'cors'
-import * as stringify from 'json-stringify-safe';
 import { Linter, LintResult, Configuration } from 'tslint'
 import { RawConfigFile } from 'tslint/lib/configuration'
 
@@ -20,10 +19,17 @@ async function lint(doc: TextDocument, config: RawConfigFile): Promise<LintResul
     const configuration = Configuration.parseConfigFile(config)
     linter.lint(doc.uri, doc.text, configuration)
     const result = linter.getResult()
-    return stringify(result)
+    // Remove sourcFile from failures to reduce bloat over the wire that isn't used yet
+    // As well as removing need for circular JSON
+    if (result && Array.isArray(result.failures)) {
+        for (const failure of result.failures) {
+            delete (failure as any).sourceFile
+        }
+    }
+    return result
 }
 
-function init() {
+export function init(port = 2345) {
     const app = express()
     app.use(bodyParser.json({ limit: '10mb' }))
     app.use(cors())
@@ -33,15 +39,16 @@ function init() {
             if (req.body.doc && req.body.config) {
                 res.send(await lint(req.body.doc, req.body.config))
             } else {
-                res.send({
+                res.status(406).send({
                     error: 'Missing document or configuration',
                 })
             }
         })
     )
-    app.listen(2345, () => {
-        console.log('Listening for HTTP requests on port 2345')
+    const server = app.listen(port, () => {
+        console.log(`Listening for HTTP requests on port ${port}`)
     })
+    return { app, server }
 }
 
 init()
